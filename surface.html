@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+	</head>
+	<body>
+		<script src="plugins/three.js-master/build/three.min.js"></script>
+		<script src="plugins/three.js-master/examples/js/controls/OrbitControls.js"></script>
+		
+		<script>
+			var scene, camera, renderer, mesh, meshfloor, mesh_2;
+			var keyboard = {};
+			var player = {height : 1.8};
+			function init(){
+				scene = new THREE.Scene();
+				camera = new THREE.PerspectiveCamera(100,window.innerWidth/window.innerHeight,0.1,1000);
+				mesh = new THREE.Mesh(
+					new THREE.BoxGeometry(1,1,1),
+					new THREE.MeshPhongMaterial({color : 0xff999, wireframe : false})
+				);
+				mesh.position.y += 1;
+				scene.add(mesh);
+
+				mesh_2 = new THREE.Mesh(
+					new THREE.BoxGeometry(1,1,1),
+					new THREE.MeshPhongMaterial({color : 0xff999, wireframe : false})
+				);
+				mesh_2.position.y += 1;
+				mesh_2.position.x += 2;
+				scene.add(mesh_2);
+
+				meshfloor = new THREE.Mesh(
+					new THREE.PlaneGeometry(10,10,10,10),
+					new THREE.MeshPhongMaterial({color : 0xffffff, wireframe : false})
+				);
+				meshfloor.rotation.x -= Math.PI/2;
+				scene.add(meshfloor);
+				const ambientLight = new THREE.AmbientLight( 0x404040 ); 
+				// ambientLight = new AmbientLight(0xffffff,0.2);
+				scene.add(ambientLight);
+				
+				light = new THREE.PointLight(0xffffff,0.8,18);
+				light.position.set(-5,10,-5);
+				light.castShadow = true;
+				light.shadow.camera.near = 0.1;
+				light.shadow.camera.far = 25;
+				scene.add(light);
+
+				camera.position.set(8,5,6);
+				camera.lookAt(new THREE.Vector3(0,player.height,0));
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth,750);
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.BasicShadowMap;
+				document.body.appendChild( renderer.domElement );		
+				const controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.update();
+				animate();
+			}
+
+			function animate(){
+				requestAnimationFrame( animate );
+				mesh.rotation.x += 0.01;
+				mesh.rotation.y += 0.01;
+
+				mesh_2.rotation.x -= 0.01;
+				mesh_2.rotation.y -= 0.01;
+
+				renderer.render( scene, camera );
+			}
+
+			function keyDown(event){
+				keyboard[event.keyCode] = true;
+			}
+
+			function keyUp(event){
+				keyboard[event.keyCode] = false;
+			}
+
+			window.addEventListener('keydown',keyDown);
+			window.addEventListener('keyup',keyUp);
+			window.onload = init;
+		</script>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+	</head>
+	<body>
+		<script src="plugins/three.js-master/build/three.min.js"></script>
+		<script src="plugins/three.js-master/examples/js/controls/OrbitControls.js"></script>
+		<script>
+			/*
+			To actually be able to display anything with three.js, we need three things: scene, camera and renderer, so that we can render the scene with camera.
+			*/
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			const renderer = new THREE.WebGLRenderer();
+			const controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+			camera.position.set( 0, 0, 1 );
+			controls.update();
+
+			renderer.setSize( window.innerWidth, window.innerHeight ); //SET SIZE
+			const geometry = new THREE.PlaneGeometry( 1, 1 );
+			const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+			const plane = new THREE.Mesh( geometry, material );
+			// plane.rotation.x = 5;
+			// plane.rotation.y = 40;
+
+			scene.add( plane );
+			document.body.appendChild( renderer.domElement );
+
+
+			//RENDERINF THE SCENCE
+			function animate() {
+				requestAnimationFrame( animate );
+				// cube.rotation.z += 0.01;
+				controls.update();
+				// cube.rotation.x += 0.01;
+				// cube.rotation.y += 0.01;
+				renderer.render( scene, camera );
+			}
+			animate();
+		</script>
+	</body>
+</html>
